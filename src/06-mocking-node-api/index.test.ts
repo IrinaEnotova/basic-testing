@@ -1,6 +1,8 @@
 // Uncomment the code below and write your tests
 import { readFileAsynchronously, doStuffByTimeout, doStuffByInterval } from '.';
 import path from 'path';
+import fs from 'fs';
+import fsp from 'fs/promises';
 
 describe('doStuffByTimeout', () => {
   beforeAll(() => {
@@ -90,9 +92,10 @@ describe('readFileAsynchronously', () => {
   });
 
   test('should return file content if file exists', async () => {
-    const pathToFile = 'test.txt';
+    jest.spyOn(fs, 'existsSync').mockReturnValue(true);
+    jest.spyOn(fsp, 'readFile').mockResolvedValue('111');
 
-    const result = await readFileAsynchronously(pathToFile);
+    const result = await readFileAsynchronously('test.txt');
 
     expect(result).toBe('111');
   });
